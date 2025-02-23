@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabio</title>
+    <!-- Consolidate Bootstrap CSS to latest version -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(to right, #9e5ce3, #f28a60);
+            --border-radius: 20px;
+            --input-padding: 10px;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #9e5ce3; /*#f8f9fa*/
+        }
+
+        .login-container {
+            max-width: 450px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-gradient {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 10px 30px;
+            font-size: 1.1rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            opacity: 0.9;
+            color: white;
+        }
+
+        .form-control {
+            border-radius: 50px;
+            padding: var(--input-padding);
+            border: 1px solid #dee2e6;
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-container img {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .error-message {
+            color: #dc3545;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <!-- Registration Modal -->
+        <div class="modal fade" id="registrationModal" tabindex="-1" aria-labelledby="registrationModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="registrationModalLabel">Crear Cuenta</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="registrationForm" novalidate>
+                            <div class="mb-3">
+                                <label for="reg-name" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="reg-name" required 
+                                       pattern="[A-Za-z ]{2,50}" title="Por favor entrar un nombre válido">
+                            </div>
+                            <div class="mb-3">
+                                <label for="reg-phone" class="form-label">Celular</label>
+                                <input type="tel" class="form-control" id="reg-phone" required
+                                       pattern="[0-9]{10}" title="Por favor, introduzca un número de teléfono válido de 10 dígitos">
+                            </div>
+                            <div class="mb-3">
+                                <label for="reg-group" class="form-label">Grupo de inglés</label>
+                                <input type="text" class="form-control" id="reg-group" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="reg-email" class="form-label">Correo</label>
+                                <input type="email" class="form-control" id="reg-email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="reg-password" class="form-label">Contraseña</label>
+                                <div class="password-toggle">
+                                    <input type="password" class="form-control" id="reg-password" required
+                                           pattern=".{8,}$"
+                                           title="La contraseña debe tener al menos 8 caracteres">
+                                    <button type="button" class="password-toggle-btn">👁️</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-gradient" id="registerBtn">Crear Cuenta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div class="login-container">
+            <div class="logo-container">
+                <h1 class="text-center mb-4">Fabio</h1>
+                <img src="images-pagina/fabio.png" alt="Why Not English Logo" class="img-fluid">
+            </div>
+
+            <div class="error-message" id="loginError"></div>
+
+            <form id="loginForm" novalidate>
+                <div class="mb-3">
+                    <label for="login-email" class="form-label">Correo</label>
+                    <input type="email" class="form-control" id="login-email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="login-password" class="form-label">Contraseña</label>
+                    <div class="password-toggle">
+                        <input type="password" class="form-control" id="login-password" required>
+                        <button type="button" class="password-toggle-btn">👁️</button>
+                    </div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-gradient">Entrar</button>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#registrationModal">Crear Cuenta</a>
+                    <span class="mx-2">|</span>
+                    <a href="reset-password.html" class="text-decoration-none">La embarraste, olvidaste contraseña?</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        // Firebase imports and configuration
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtl7dzmkO104G7SHO4G-F7cyLiASTbuZE",
+            authDomain: "fabio-c2127.firebaseapp.com",
+            projectId: "fabio-c2127",
+            storageBucket: "fabio-c2127.firebasestorage.app",
+            messagingSenderId: "976265620989",
+            appId: "1:976265620989:web:e7604348d0968fdb213d94",
+            measurementId: "G-LWQLEMGBRV"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Form validation and submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                showError('Invalid email or password');
+            }
+        });
+
+        // Registration handling
+        document.getElementById('registerBtn').addEventListener('click', async () => {
+            const form = document.getElementById('registrationForm');
+            
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const name = document.getElementById('reg-name').value;
+            const phone = document.getElementById('reg-phone').value;
+            const group = document.getElementById('reg-group').value;
+
+            try {
+                const userExists = await checkUserExists(email);
+                if (userExists) {
+                    showError('Email already registered');
+                    return;
+                }
+
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await addDoc(collection(db, "users"), {
+                    uid: userCredential.user.uid,
+                    name,
+                    phone,
+                    group,
+                    email
+                });
+
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+
+        // Password visibility toggle
+        document.querySelectorAll('.password-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const input = btn.previousElementSibling;
+                input.type = input.type === 'password' ? 'text' : 'password';
+                btn.textContent = input.type === 'password' ? '👁️' : '👁️‍🗨️';
+            });
+        });
+
+        // Helper functions
+        async function checkUserExists(email) {
+            const userRef = doc(db, "users", email);
+            const docSnap = await getDoc(userRef);
+            return docSnap.exists();
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('loginError');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
