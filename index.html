@@ -125,7 +125,9 @@
             querySnapshot.forEach((doc) => {
                 //console.log("Datos del documento:", doc.data().name);
                 localStorage.setItem("nombre_fabio", doc.data().name);
-		if(!localStorage.getItem("categoria")){localStorage.setItem("categoria", 'Accessories');}
+		if(!localStorage.getItem("categoria")){
+			localStorage.setItem("categoria", "Accessories")
+		}
             });
         }
         window.location.href = 'vocabulario/index.html';
