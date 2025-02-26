@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" defer></script>
+    <link rel="stylesheet" href="../css/principal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@700&display=swap" rel="stylesheet">
+    <link rel="icon" href="../images-pagina/fabio.png" type="image/x-icon">
+    <script defer src="../nav.js"></script>
+    <link rel="stylesheet" href="styles.css">
+<style>
+      
+        .practice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .sentence-display {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .sentence-spanish {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        .sentence-english {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #0056b3;
+        }
+        .btn-next {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 500;
+        }
+        .btn-next:hover {
+            background-color: #003d7a;
+        }
+        .answer-section {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            display: none;
+        }
+        .answer-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+        }
+        .btn-check {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-check:hover {
+            background-color: #218838;
+        }
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+    <title>Práctica de Inglés</title>
+</head>
+<body>
+
+    <div id="nav"></div>
+    <div class="practice-container mt-2">
+        <div class="header">
+            <h1>Práctica de Inglés</h1>
+            <p>Mejora tu inglés practicando diferentes tiempos verbales</p>
+        </div>
+        
+        <div class="controls">
+            <div class="form-group">
+                <label for="tense-select">Tiempo Verbal:</label>
+                <select id="tense-select" class="form-select">
+                    <option value="present-simple">Presente Simple</option>
+                    <option value="present-continuous">Presente Continuo</option>
+                    <option value="present-perfect">Presente Perfecto</option>
+                    <option value="present-perfect-continuous">Presente Perfecto Continuo</option>
+                    <option value="past-simple">Pasado Simple</option>
+                    <option value="past-continuous">Pasado Continuo</option>
+                    <option value="past-perfect">Pasado Perfecto</option>
+                    <option value="future-simple">Futuro Simple</option>
+                    <option value="future-continuous">Futuro Continuo</option>
+                    <option value="future-perfect">Futuro Perfecto</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="sentence-type">Tipo de Oración:</label>
+                <select id="sentence-type" class="form-select">
+                    <option value="affirmative">Afirmativa</option>
+                    <option value="negative">Negativa</option>
+                    <option value="question">Pregunta</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="difficulty">Dificultad:</label>
+                <select id="difficulty" class="form-select">
+                    <option value="easy">Fácil</option>
+                    <option value="medium">Media</option>
+                    <option value="hard">Difícil</option>
+                </select>
+            </div>
+        </div>
+        
+        <button id="btn-start" class="btn-next">Comenzar Práctica</button>
+        
+        <div id="practice-area" style="display: none;">
+            <div class="sentence-display">
+                <div class="sentence-spanish" id="spanish-sentence"></div>
+                <div class="sentence-english" id="english-sentence"></div>
+            </div>
+            
+            <div class="answer-section">
+                <input type="text" class="answer-input" id="user-answer" placeholder="Escribe tu respuesta en inglés...">
+                <button class="btn-check" id="btn-check">Verificar</button>
+                <div class="feedback" id="feedback"></div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <button class="btn btn-danger m-2" id="btn-show-answer">Mostrar Respuesta</button>
+                <button class="btn btn-primary m-2" id="btn-next">Siguiente Oración</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de práctica
+        const practiceData = {
+            "present-simple": {
+                "affirmative": [
+                    { spanish: "Yo trabajo todos los días", english: "I work every day" },
+                    { spanish: "Ella estudia inglés", english: "She studies English" },
+                    { spanish: "Nosotros jugamos al fútbol los domingos", english: "We play football on Sundays" },
+                    { spanish: "Ellos viven en Madrid", english: "They live in Madrid" },
+                    { spanish: "Tú comes muchas frutas", english: "You eat a lot of fruit" }
+                ],
+                "negative": [
+                    { spanish: "Yo no trabajo los fines de semana", english: "I don't work on weekends" },
+                    { spanish: "Ella no estudia francés", english: "She doesn't study French" },
+                    { spanish: "Nosotros no jugamos al baloncesto", english: "We don't play basketball" },
+                    { spanish: "Ellos no viven en Barcelona", english: "They don't live in Barcelona" },
+                    { spanish: "Tú no comes carne", english: "You don't eat meat" }
+                ],
+                "question": [
+                    { spanish: "¿Trabajas todos los días?", english: "Do you work every day?" },
+                    { spanish: "¿Estudia ella inglés?", english: "Does she study English?" },
+                    { spanish: "¿Jugamos al fútbol los domingos?", english: "Do we play football on Sundays?" },
+                    { spanish: "¿Viven ellos en Madrid?", english: "Do they live in Madrid?" },
+                    { spanish: "¿Comes muchas frutas?", english: "Do you eat a lot of fruit?" }
+                ]
+            },
+            "present-continuous": {
+                "affirmative": [
+                    { spanish: "Estoy trabajando ahora", english: "I am working now" },
+                    { spanish: "Ella está estudiando inglés", english: "She is studying English" },
+                    { spanish: "Estamos jugando al fútbol", english: "We are playing football" },
+                    { spanish: "Ellos están viviendo en un hotel", english: "They are living in a hotel" },
+                    { spanish: "Estás comiendo demasiado rápido", english: "You are eating too fast" }
+                ],
+                "negative": [
+                    { spanish: "No estoy trabajando ahora", english: "I am not working now" },
+                    { spanish: "Ella no está estudiando inglés", english: "She is not studying English" },
+                    { spanish: "No estamos jugando al fútbol", english: "We are not playing football" },
+                    { spanish: "Ellos no están viviendo en un hotel", english: "They are not living in a hotel" },
+                    { spanish: "No estás comiendo demasiado rápido", english: "You are not eating too fast" }
+                ],
+                "question": [
+                    { spanish: "¿Estás trabajando ahora?", english: "Are you working now?" },
+                    { spanish: "¿Está ella estudiando inglés?", english: "Is she studying English?" },
+                    { spanish: "¿Estamos jugando al fútbol?", english: "Are we playing football?" },
+                    { spanish: "¿Están ellos viviendo en un hotel?", english: "Are they living in a hotel?" },
+                    { spanish: "¿Estás comiendo demasiado rápido?", english: "Are you eating too fast?" }
+                ]
+            },
+            "past-simple": {
+                "affirmative": [
+                    { spanish: "Yo trabajé ayer", english: "I worked yesterday" },
+                    { spanish: "Ella estudió inglés el año pasado", english: "She studied English last year" },
+                    { spanish: "Nosotros jugamos al fútbol el domingo pasado", english: "We played football last Sunday" },
+                    { spanish: "Ellos vivieron en Londres durante cinco años", english: "They lived in London for five years" },
+                    { spanish: "Tú comiste en ese restaurante", english: "You ate at that restaurant" }
+                ],
+                "negative": [
+                    { spanish: "Yo no trabajé ayer", english: "I didn't work yesterday" },
+                    { spanish: "Ella no estudió inglés el año pasado", english: "She didn't study English last year" },
+                    { spanish: "Nosotros no jugamos al fútbol el domingo pasado", english: "We didn't play football last Sunday" },
+                    { spanish: "Ellos no vivieron en Londres", english: "They didn't live in London" },
+                    { spanish: "Tú no comiste en ese restaurante", english: "You didn't eat at that restaurant" }
+                ],
+                "question": [
+                    { spanish: "¿Trabajaste ayer?", english: "Did you work yesterday?" },
+                    { spanish: "¿Estudió ella inglés el año pasado?", english: "Did she study English last year?" },
+                    { spanish: "¿Jugamos al fútbol el domingo pasado?", english: "Did we play football last Sunday?" },
+                    { spanish: "¿Vivieron ellos en Londres?", english: "Did they live in London?" },
+                    { spanish: "¿Comiste en ese restaurante?", english: "Did you eat at that restaurant?" }
+                ]
+            },
+            "future-simple": {
+                "affirmative": [
+                    { spanish: "Yo trabajaré mañana", english: "I will work tomorrow" },
+                    { spanish: "Ella estudiará inglés el próximo año", english: "She will study English next year" },
+                    { spanish: "Nosotros jugaremos al fútbol el domingo", english: "We will play football on Sunday" },
+                    { spanish: "Ellos vivirán en Londres el próximo mes", english: "They will live in London next month" },
+                    { spanish: "Tú comerás en ese restaurante", english: "You will eat at that restaurant" }
+                ],
+                "negative": [
+                    { spanish: "Yo no trabajaré mañana", english: "I will not work tomorrow" },
+                    { spanish: "Ella no estudiará inglés el próximo año", english: "She will not study English next year" },
+                    { spanish: "Nosotros no jugaremos al fútbol el domingo", english: "We will not play football on Sunday" },
+                    { spanish: "Ellos no vivirán en Londres", english: "They will not live in London" },
+                    { spanish: "Tú no comerás en ese restaurante", english: "You will not eat at that restaurant" }
+                ],
+                "question": [
+                    { spanish: "¿Trabajarás mañana?", english: "Will you work tomorrow?" },
+                    { spanish: "¿Estudiará ella inglés el próximo año?", english: "Will she study English next year?" },
+                    { spanish: "¿Jugaremos al fútbol el domingo?", english: "Will we play football on Sunday?" },
+                    { spanish: "¿Vivirán ellos en Londres?", english: "Will they live in London?" },
+                    { spanish: "¿Comerás en ese restaurante?", english: "Will you eat at that restaurant?" }
+                ]
+            },
+            "present-perfect": {
+                "affirmative": [
+                    { spanish: "He trabajado todo el día", english: "I have worked all day" },
+                    { spanish: "Ella ha estudiado inglés durante tres años", english: "She has studied English for three years" },
+                    { spanish: "Hemos jugado al fútbol muchas veces", english: "We have played football many times" },
+                    { spanish: "Ellos han vivido en Londres desde 2015", english: "They have lived in London since 2015" },
+                    { spanish: "Has comido en ese restaurante varias veces", english: "You have eaten at that restaurant several times" }
+                ],
+                "negative": [
+                    { spanish: "No he trabajado hoy", english: "I have not worked today" },
+                    { spanish: "Ella no ha estudiado inglés", english: "She has not studied English" },
+                    { spanish: "No hemos jugado al fútbol desde hace años", english: "We have not played football for years" },
+                    { spanish: "Ellos no han vivido en Londres nunca", english: "They have never lived in London" },
+                    { spanish: "No has comido en ese restaurante", english: "You have not eaten at that restaurant" }
+                ],
+                "question": [
+                    { spanish: "¿Has trabajado hoy?", english: "Have you worked today?" },
+                    { spanish: "¿Ha estudiado ella inglés?", english: "Has she studied English?" },
+                    { spanish: "¿Hemos jugado al fútbol juntos antes?", english: "Have we played football together before?" },
+                    { spanish: "¿Han vivido ellos en Londres?", english: "Have they lived in London?" },
+                    { spanish: "¿Has comido en ese restaurante?", english: "Have you eaten at that restaurant?" }
+                ]
+            }
+        };
+        
+        // Añadir datos para otros tiempos verbales siguiendo la misma estructura
+        
+        let currentSentence = null;
+        let currentSentences = [];
+        let currentIndex = 0;
+        
+        // Función para iniciar la práctica
+        document.getElementById('btn-start').addEventListener('click', function() {
+            const tenseValue = document.getElementById('tense-select').value;
+            const sentenceType = document.getElementById('sentence-type').value;
+            
+            // Verificar si existen datos para la combinación seleccionada
+            if (practiceData[tenseValue] && practiceData[tenseValue][sentenceType]) {
+                currentSentences = [...practiceData[tenseValue][sentenceType]];
+                // Mezclar las oraciones para que salgan en orden aleatorio
+                shuffleArray(currentSentences);
+                currentIndex = 0;
+                showCurrentSentence();
+                document.getElementById('practice-area').style.display = 'block';
+                document.getElementById('btn-start').style.display = 'none';
+            } else {
+                alert("No hay datos disponibles para esta combinación. Por favor, seleccione otra.");
+            }
+        });
+        
+        // Cambiar al siguiente tiempo verbal
+        document.getElementById('tense-select').addEventListener('change', function() {
+            document.getElementById('practice-area').style.display = 'none';
+            document.getElementById('btn-start').style.display = 'block';
+        });
+        
+        // Cambiar tipo de oración
+        document.getElementById('sentence-type').addEventListener('change', function() {
+            document.getElementById('practice-area').style.display = 'none';
+            document.getElementById('btn-start').style.display = 'block';
+        });
+        
+        // Mostrar la oración actual
+        function showCurrentSentence() {
+            if (currentIndex < currentSentences.length) {
+                currentSentence = currentSentences[currentIndex];
+                document.getElementById('spanish-sentence').textContent = currentSentence.spanish;
+                document.getElementById('english-sentence').textContent = '';
+                document.getElementById('user-answer').value = '';
+                document.getElementById('feedback').style.display = 'none';
+                document.querySelector('.answer-section').style.display = 'block';
+            } else {
+                // Se han terminado las oraciones, reiniciar
+                alert("¡Has completado todas las oraciones! Volviendo al inicio.");
+                currentIndex = 0;
+                showCurrentSentence();
+            }
+        }
+        
+        // Mostrar la respuesta correcta
+        document.getElementById('btn-show-answer').addEventListener('click', function() {
+            document.getElementById('english-sentence').textContent = currentSentence.english;
+        });
+        
+        // Pasar a la siguiente oración
+        document.getElementById('btn-next').addEventListener('click', function() {
+            currentIndex++;
+            showCurrentSentence();
+        });
+        
+        // Verificar la respuesta del usuario
+        document.getElementById('btn-check').addEventListener('click', function() {
+            const userAnswer = document.getElementById('user-answer').value.trim();
+            const correctAnswer = currentSentence.english;
+            
+            const feedback = document.getElementById('feedback');
+            
+            if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                feedback.textContent = "¡Correcto!";
+                feedback.classList.remove('incorrect');
+                feedback.classList.add('correct');
+            } else {
+                feedback.textContent = "Incorrecto. La respuesta correcta es: " + correctAnswer;
+                feedback.classList.remove('correct');
+                feedback.classList.add('incorrect');
+            }
+            
+            feedback.style.display = 'block';
+        });
+        
+        // Función para mezclar un array (algoritmo Fisher-Yates)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+    </script>
+</body>
+</html>

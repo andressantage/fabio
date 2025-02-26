@@ -1,16 +1,26 @@
 /* styles.css */
-
 :root {
     --primary-gradient: linear-gradient(to right, #9e5ce3, #f28a60);
     --border-radius: 20px;
     --input-padding: 10px;
 }
+.botonNav{
+    background-color: rgb(196, 195, 195);
+    color: #2e81c9;
+    border: 1px ;
+    border-radius: 50%;
+}
+.botonNavbar{
+    background-color: rgb(211, 209, 209);
 
+}
+.navbar-toggler {
+    display: block !important; /* Fuerza la visibilidad en todos los tamaños */
+}
 .container {
     max-width: 800px;
     margin: 0 auto;
 }
-
 header h1 {
     text-align: center;
     color: #fff; /* Blanco para contrastar con el fondo morado */
@@ -80,8 +90,11 @@ header h1 {
     flex-grow: 1;
     padding: var(--input-padding);
     border: 1px solid #dee2e6;
-    border-radius: 50px; /* Bordes redondeados como en el inicio de sesión */
+    border-radius: 10px; /* Bordes redondeados como en el inicio de sesión */
     resize: none;
+
+    text-align: center; /* Centra el texto horizontalmente */
+    line-height: normal;
 }
 
 .send-button {

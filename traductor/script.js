@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const palabraBuscar=document.getElementById("palabraBuscar").value.trim().toLowerCase()
         let resultado = dic.find(element => element["Ingles"] === palabraBuscar);    
         if(resultado){
+            document.getElementById("palabraBuscar").value=''
             busqueda.innerHTML=`
             <div class="inicio">
                 <h2 class="text-white mt-3 mb-0" id="palabraFonetica">&nbsp</h2>
@@ -89,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 audio.play();
             });
         }else{
+            document.getElementById("palabraBuscar").value=''
             const f1_palabra_esp=await traducir_español(palabraBuscar)
             const f1_frase=''
             const f1_imagen=await buscarImagenes(palabraBuscar)
@@ -115,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>     
             <audio id="audio" src="${f1_sonar}" autoplay></audio> 
             `
-
+            
             const palabraFonetica=document.getElementById("palabraFonetica")
             const palabra=document.getElementById("palabra")
             const frase=document.getElementById("frase")
@@ -170,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const palabraBuscarEsp=document.getElementById("palabraBuscarEsp").value.trim().toLowerCase()
         let resultado = dic.find(element => element["Español"] === palabraBuscarEsp);    
         if(resultado){
+            document.getElementById("palabraBuscarEsp").value=''
             busqueda.innerHTML=`
             <div class="inicio">
                 <h2 class="text-white mt-3 mb-0" id="palabraFonetica">&nbsp</h2>
@@ -227,6 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 audio.play();
             });
         }else{
+            document.getElementById("palabraBuscarEsp").value=''
             const f2_palabra_ing=await traducir_español(palabraBuscarEsp)
             const f2_frase=''
             const f2_imagen=await buscarImagenes(f2_palabra_ing)

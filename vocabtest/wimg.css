@@ -27,6 +27,9 @@ img{
     .niv{
         padding-right: 2px;
     }
+    .frases{
+        font-size: 30px !important;
+    }
 }
 .cuadroBotones {
     display: grid;

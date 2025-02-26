@@ -70,6 +70,11 @@ body {
     font-weight: 700;
     font-size: 40px;
 }
+@media ( max-width: 440px){
+    .frases{
+        font-size: 25px;
+    }
+}
 .contenidoFrases{
     padding-top:20px ;
     padding-bottom: 20px;

@@ -138,6 +138,7 @@ function actualizarInterfaz() {
 function siguientePalabra(userEmail) {
     intentosFallidos = 0;
     indicePalabra++;
+    document.getElementById('palabraBuscarEsp').value=''
     actualizarInterfaz(userEmail);
 }
 
