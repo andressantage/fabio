@@ -1,0 +1,80 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+img{
+    height: 200px;
+    width:200px;
+}
+.ancho{
+    padding-left: 5px;
+}
+.anchoSelect{
+    width: 9rem;
+}
+.niv{
+    padding-right: 5px;
+}
+.practica{
+    padding: 0.375rem 0rem 0.375rem 0.75rem;
+}
+@media (max-width: 440px){
+    .ancho{
+        width: 34%;
+        padding-left: 2px;
+    }
+    .niv{
+        padding-right: 2px;
+    }
+}
+.gridImagen{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    place-items:center;
+}
+.itemImagen{
+    width:230px !important;
+    height:150px !important;
+    margin: 5px;
+}
+@media (max-width: 762px){
+    .gridImagen{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        place-items:center;
+    }
+    .itemImagen{
+        width:230px !important;
+        height:150px !important;
+        margin: 5px;
+    }
+}
+@media (max-width: 480px){
+    .gridImagen{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        place-items:center;
+    }
+    .itemImagen{
+        width:150px !important;
+        height:100px !important;
+        margin: 5px;
+    }
+}
+@media (max-width: 320px){
+    .gridImagen{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        place-items:center;
+    }
+    .itemImagen{
+        width:100px !important;
+        height:67px !important;
+        margin: 5px;
+    }
+}
+.cuadroBotones{
+    display: grid;
+    width: 10px;
+}

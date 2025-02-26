@@ -11,273 +11,19 @@
     <link rel="stylesheet" href="../css/boostrap-css/bootstrap.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@700&display=swap" rel="stylesheet">
     <script src="../css/boostrap.js/bootstrap.js" defer></script>
-    <!-- icono de next -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>fabio</title>
-<style>
-    *{
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-    }
-    img{
-        height: 200px;
-        width:200px;
-    }
-</style>
-<script>
-        const catElement = document.getElementById("cat");
-        const nivElement = document.getElementById("niv");
-        if (catElement) {
-            catElement.addEventListener("change", () => {
-                localStorage.setItem("categoria", catElement.value);
-                window.location="index.html"
-        })}
-        if (nivElement) {
-            nivElement.addEventListener("change", () => {
-                localStorage.setItem("nivel", nivElement.value);
-                window.location="index.html"
-        })}
-        const firebaseConfig = {
-            apiKey: "AIzaSyBtl7dzmkO104G7SHO4G-F7cyLiASTbuZE",
-            authDomain: "fabio-c2127.firebaseapp.com",
-            projectId: "fabio-c2127",
-            storageBucket: "fabio-c2127.firebasestorage.app",
-            messagingSenderId: "976265620989",
-            appId: "1:976265620989:web:e7604348d0968fdb213d94",
-            measurementId: "G-LWQLEMGBRV"
-        };
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                console.log("Usuario autenticado:", user.email);
-                inicializarInterfaz(user.email); // Pasa el correo del usuario
-            } else {
-                console.log("Usuario no autenticado");
-                window.location.href = "../index.html"; // Redirige al login
-            }
-        });
-        function shuffle(array) { 
-            array.sort(() => Math.random() - 0.5);
-        }
-        shuffle(lista);
-        const palabraFonetica=document.getElementById("palabraFonetica")
-        const facil=document.getElementById("facil")
-        const dificil=document.getElementById("dificil")
-        const palabra=document.getElementById("palabra")
-        const frase=document.getElementById("frase")
-        const traducir=document.getElementById("traducir")
-        const fonetica=document.getElementById("fonetica")
-        const sonar=document.getElementById("sonar")
-        const contenidoPalabra=document.getElementById("contenidoPalabra")
-        const contenidoBoton=document.getElementById("contenidoBoton")
-        const audio=document.getElementById("audio")
-        const imagen=document.getElementById("imagen")
-
-        const next=document.getElementById("next")
-
-        let m=0
-        let p=dic[1].indexOf(lista[m]) //guarda la posicion de cada palabra inglesa
-        
-        lista1=[...lista]
-        shuffle(lista1)
-        //console.log(lista1)
-        let imagenesLista=[]
-        imagenesLista.push(dic[3][p])
-        abc=1
-        while(abc<8){
-            if(dic[1][p]===lista1[abc]){
-                //console.log(dic[1][p])
-            }else if(imagenesLista.length<6){
-                //console.log(dic[1][p])
-                var p1=dic[1].indexOf(lista1[abc])
-                imagenesLista.push(dic[3][p1])
-            }
-            abc=abc+1
-        }
-        //console.log(imagenesLista) 
-
-        const b=document.querySelectorAll('.itemImagen')
-        if(dic[3][p]===undefined){
-            imagen.src='https://lamenteesmaravillosa.com/wp-content/uploads/2021/11/rosa-blanca.jpg'
-        }else{
-            shuffle(imagenesLista)
-            b[0].src=imagenesLista[0]
-            b[1].src=imagenesLista[1]
-            b[2].src=imagenesLista[2]
-            b[3].src=imagenesLista[3]
-            b[4].src=imagenesLista[4]
-            b[5].src=imagenesLista[5]
-        }
-        audio.src=dic[7][p]
-        sonar.addEventListener("click",function(){
-            audio.play();
-        });
-
-        function d1(){
-            m++
-            if(m===datos.length){
-                m=0
-                p=dic[1].indexOf(lista[m])
-                palabra.innerHTML='Ya terminaste. Recarga la pagina para empezar de nuevo'
-            }
-            p=dic[1].indexOf(lista[m])
-            audio.src=dic[7][p]
-            audio.play();
-
-            lista1=[...lista]
-            shuffle(lista1)
-            //console.log(lista1)
-            let imagenesLista=[]
-            imagenesLista.push(dic[3][p])
-            abc=1
-            while(abc<8){
-                if(dic[1][p]===lista1[abc]){
-                    //console.log(dic[1][p])
-                }else if(imagenesLista.length<6){
-                    //console.log(dic[1][p])
-                    var p1=dic[1].indexOf(lista1[abc])
-                    imagenesLista.push(dic[3][p1])
-                }
-                abc=abc+1
-            }
-            //console.log(imagenesLista) 
-            shuffle(imagenesLista)
-            b[0].src=imagenesLista[0]
-            b[1].src=imagenesLista[1]
-            b[2].src=imagenesLista[2]
-            b[3].src=imagenesLista[3]
-            b[4].src=imagenesLista[4]
-            b[5].src=imagenesLista[5]
-            palabra.innerHTML='&nbsp'
-        }
-
-        let a=0
-        let cuantas=0
-        b.forEach((boton) => {
-            boton.addEventListener('click', (event) => {
-                const botonClicado = event.target;
-                console.log(botonClicado.src)
-                if(dic[3][p]===botonClicado.src){
-                    palabra.innerHTML="Muy bien! es: "+dic[1][p]+": "+dic[2][p]
-                    a=0
-                    if(cuantas===0){
-                        contenidoPalabra.value = dic[1][p];
-                        contenidoBoton.value = 'facil';
-                        $.ajax({
-                        type: 'POST',
-                        url: '../index/insertar.php',
-                        data: $("#form1").serialize(),
-                        success: function(resultado) {
-                        },
-                        error: function(xhr, status, error) {
-                            alert('Error al guardar los datos');
-                        }
-                        });
-                    }
-                }else{
-                    if(a===0){
-                        palabra.innerHTML="La embarraste!"
-                        a=1
-                        cuantas=1
-
-                        contenidoPalabra.value = dic[1][p];
-                        contenidoBoton.value = 'dificil';
-                        $.ajax({
-                        type: 'POST',
-                        url: '../index/insertar.php',
-                        data: $("#form1").serialize(),
-                        success: function(resultado) {
-                        },
-                        error: function(xhr, status, error) {
-                            alert('Error al guardar los datos');
-                        }
-                        });
-                    }else if(a===1){
-                        palabra.innerHTML="La embarraste de nuevo!"
-                        a=0
-                        cuantas=1
-
-                        contenidoPalabra.value = dic[1][p];
-                        contenidoBoton.value = 'dificil';
-                        $.ajax({
-                        type: 'POST',
-                        url: '../index/insertar.php',
-                        data: $("#form1").serialize(),
-                        success: function(resultado) {
-                        },
-                        error: function(xhr, status, error) {
-                            alert('Error al guardar los datos');
-                        }
-                        });
-                    }
-                }
-            });
-        });
-
-        next.addEventListener('click', function(){
-            cuantas=0
-            d1()
-        })
-</script>
+    <link rel="stylesheet" href="index.css">
+    <script defer src="../nav.js"></script>
+    <script async type="module" src="index.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg" style="background-color: white;">
-    <div class="d-flex align-items-center justify-content-between w-100">
-         <!--  <li><a class="navbar-brand" href="#"></a></li> -->
-        <button class="navbar-toggler mx-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse m-2" id="navbarNavAltMarkup">
-        <div class="navbar-nav centrar gap-4">
-            <li><a class="nav-link" aria-current="page" href="../vocabulario/index.php">VOCABULARIO</a></li>
-            <!-- <li><a class="nav-link" href="../gramatica/index.php">GRAMATICA</a></li> -->
-            <li><a class="nav-link" href="../traductor/index.php">TRADUCTOR</a></li>
-            <li><a class="nav-link" href="../vocabtest/index.php">VOCABTEST</a></li>
-            <li><a class="nav-link" href="https://docs.google.com/forms/d/e/1FAIpQLSeC7wJfjvqxFBLfc-8nZVT7nEgczoTcH9DL3B_whKMaD8eILw/viewform">AYUDA A MEJORAR</a></li>
-        </div>
-        </div>
-    <div class="d-flex align-items-center justify-content-end">
-        <p  class="nUsuario m-0"><?php echo ucwords($_SESSION['nombre']) ?></p>
-        <!-- <img class="usuario" src="/images-pagina/images.png" width="3%" height="3%" alt=""> -->
-        <!-- aqui iria emotico para revisar perfil del usuario -->
-        <div class="cerra">
-            <a href="../index/salir.php"><button class="cerrasesion">Cerrar sesión</button></a>
-        </div>
-    </div>
-    </div>
-</nav>
-
-<style>
-    .ancho{
-        padding-left: 5px;
-    }
-    .anchoSelect{
-        width: 9rem;
-    }
-    .niv{
-        padding-right: 5px;
-    }
-    .practica{
-        padding: 0.375rem 0rem 0.375rem 0.75rem;
-    }
-    @media (max-width: 440px){
-        .ancho{
-            width: 34%;
-            padding-left: 2px;
-        }
-        .niv{
-            padding-right: 2px;
-        }
-    }
-</style>
+    <div id="nav"></div>
 
 <div class="d-flex flex-row justify-content-between">
     <div class="pt-1 ancho">
-            <select class="form-select anchoSelect" aria-label="Default select example"  id="cat" onchange="this.form.submit()">
-                <option selected>Categorías</option>
+            <select class="form-select anchoSelect" aria-label="Default select example"  id="cat">
+                <option id="opcionesSelec" selected>Categorías</option>
                 <option value="todas">Todas</option>
                 <option value="Accessories">Accessories</option>
                 <option value="Action">Action</option>
@@ -350,73 +96,23 @@
                 <option value="Wild animals">Wild animals</option>
                 <option value="Time">Time</option>
             </select>
-        <p class="my-0 text-white"> Categoría: <?php echo $_SESSION['categoria']; ?></p>
+            <p class="my-0 text-white"> Categoría: <span id="ponerCategoria"></span></p>
     </div>
 
     <div class="pt-1 niv">
-        <select class="form-select practica" aria-label="Default select example"  id="niv" onchange="this.form.submit()">
+        <select class="form-select practica" aria-label="Default select example"  id="prac">
             <option selected>Practicar</option>
             <option value="listening">Listening</option>
             <option value="reading">Reading</option>
             <option value="wr. imagen">Writing Imagen</option>
             <option value="wr. audio">Writing Audio</option>
         </select>
-        <p class="my-0 text-white"> Practica: <span id="practica"></span></p>
+        <p class="my-0 text-white"> Practica: <span id="ponerPractica"></span></p>
     </div>
 </div>
 
     <div class="inicio">
         <h2 class="text-white mb-0" id="palabraFonetica">Seleccionar imagen segun audio</h2>
-
-        <style>
-        .gridImagen{
-            display:grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            place-items:center;
-        }
-        .itemImagen{
-            width:230px !important;
-            height:150px !important;
-            margin: 5px;
-        }
-        @media (max-width: 762px){
-            .gridImagen{
-                display:grid;
-                grid-template-columns: 1fr 1fr;
-                place-items:center;
-            }
-            .itemImagen{
-                width:230px !important;
-                height:150px !important;
-                margin: 5px;
-            }
-        }
-        @media (max-width: 480px){
-            .gridImagen{
-                display:grid;
-                grid-template-columns: 1fr 1fr;
-                place-items:center;
-            }
-            .itemImagen{
-                width:150px !important;
-                height:100px !important;
-                margin: 5px;
-            }
-        }
-        @media (max-width: 320px){
-            .gridImagen{
-                display:grid;
-                grid-template-columns: 1fr 1fr;
-                place-items:center;
-            }
-            .itemImagen{
-                width:100px !important;
-                height:67px !important;
-                margin: 5px;
-            }
-        }
-        </style>
-        <!-- imagen mas los dos botones -->
         <div class="gridImagen">
              <img class="itemImagen a1" id="imagen" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwPFaudjtLfihsrvL_wGgYVp5g5Jykdgt4fg&usqp=CAU" alt="imagen">
              <img class="itemImagen a2" id="imagen" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwPFaudjtLfihsrvL_wGgYVp5g5Jykdgt4fg&usqp=CAU" alt="imagen">
@@ -425,19 +121,9 @@
              <img class="itemImagen a5" id="imagen" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwPFaudjtLfihsrvL_wGgYVp5g5Jykdgt4fg&usqp=CAU" alt="imagen">
              <img class="itemImagen a6" id="imagen" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwPFaudjtLfihsrvL_wGgYVp5g5Jykdgt4fg&usqp=CAU" alt="imagen">
         </div>
-
-        <style>
-            .cuadroBotones{
-                display: grid;
-                width: 10px;
-            }
-        </style>
-
         <div class="contenidoFrases pt-0 pb-0">
             <h2 class="frases mt-1" id="palabra">&nbsp</h2>
         </div>
-
-        <!-- los tres botones -->
         <div class="padding-y">
             <button class="btn btn-success" id="sonar">SONIDO</button>
             <button id="next" class="btn btn-light">
@@ -447,14 +133,6 @@
             </button>
         </div>
     </div>
-
-    <!-- bloque oculto -->
-    <!-- este audio a igual que los input con hidden aparece oculto no hay necesidad de hacerle css -->
     <audio id="audio" src="" autoplay></audio>
-    <form action="insertar.php" method="POST" id="form1">
-        <input type="hidden" name="contenidoPalabra" id="contenidoPalabra"> <!-- //guarda el valor que esta en a1 -->
-        <input type="hidden" name="contenidoBoton" id="contenidoBoton"> <!-- //guarda el valor de los botones -->
-    </form>
-
 </body>
 </html>

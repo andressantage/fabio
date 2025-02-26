@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/principal.css">
+    <link rel="stylesheet" href="../css/boostrap-css/bootstrap.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@700&display=swap" rel="stylesheet">
+    <script src="../css/boostrap.js/bootstrap.js" defer></script>
+    <title>fabio</title>
+    <link rel="stylesheet" href="waudio.css">
+    <script defer src="../nav.js"></script>
+    <script type="module" src="wimg.js"></script>
+</head>
+<body>
+    <div id="nav"></div>
+    <div class="d-flex flex-row justify-content-between">
+        <div class="pt-1 ancho">
+                <select class="form-select anchoSelect" aria-label="Default select example"  id="cat">
+                    <option id="opcionesSelec" selected>Categorías</option>
+                    <option value="todas">Todas</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Action">Action</option>
+                    <option value="Bedrooms">Bedrooms</option>
+                    <option value="Body Parts 1">Body Parts 1</option>
+                    <option value="Clothes 1">Clothes 1</option>
+                    <option value="Clothes 2">Clothes 2</option>
+                    <option value="Colours">Colours</option>
+                    <option value="Daily routine">Daily routine</option>
+                    <option value="Drinks">Drinks</option>
+                    <option value="Everyday Obje">Everyday Obje</option>
+                    <option value="Farm animals">Farm animals</option>
+                    <option value="Food in Britain 1">Food in Britain 1</option>
+                    <option value="Food in Brain 2">Food in Brain 2</option>
+                    <option value="Fruit 1">Fruit 1</option>
+                    <option value="Holidays">Holidays</option>
+                    <option value="Homes">Homes</option>
+                    <option value="Hotels">Hotels</option>
+                    <option value="Jobs 1">Jobs 1</option>
+                    <option value="Jobs 2">Jobs 2</option>
+                    <option value="Kitchens 1">Kitchens 1</option>
+                    <option value="Living roms">Living roms</option>
+                    <option value="Meals and cook">Meals and cook</option>
+                    <option value="Relationship">Relationship</option>
+                    <option value="Money">Money</option>
+                    <option value="Moving">Moving</option>
+                    <option value="Nature1">Nature1</option>
+                    <option value="Places in a town">Places in a town</option>
+                    <option value="Restaurants 1">Restaurants 1</option>
+                    <option value="School">School</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Snacks and desserts">Snacks and desserts</option>
+                    <option value="Transport 1">Transport 1</option>
+                    <option value="Transport 2">Transport 2</option>
+                    <option value="Weather">Weather</option>
+                    <option value="Air travel">Preposiciones y conjunciones</option>
+                    <option value="Around town">Articulos</option>
+                    <option value="Saludos y cortesia">Saludos y cortesia</option>
+                    <option value="Preguntas">Preguntas</option>
+                    <option value="Adjetivos">Adjetivos</option>
+                    <option value="Adverbios">Adverbios</option>
+                    <option value="Numeros">Numeros</option>
+                    <option value="Verbs">Verbs</option>
+                    <option value="Otras">Otras</option>
+                    <option value="Pronombres Personales">Pronombres Personales</option>
+                    <option value="Pronombres Posesivos">Pronombres Posesivos</option>
+                    <option value="Pronombres Demostrativos">Pronombres Demostrativos</option>
+                    <option value="Air travel">Air travel</option>
+                    <option value="Around town">Around town</option>
+                    <option value="Others importants">Others importants</option>
+                    <option value="Bathrooms">Bathrooms</option>
+                    <option value="Appearance 2">Appearance 2</option>
+                    <option value="Bicycles and motorbikes">Bicycles and motorbikes</option>
+                    <option value="Beaches">Beaches</option>
+                    <option value="Body parts 2">Body parts 2</option>
+                    <option value="Cars">Cars</option>
+                    <option value="Christmas in the UK">Christmas in the UK</option>
+                    <option value="Containers">Containers</option>
+                    <option value="Football">Football</option>
+                    <option value="Fruit 2">Fruit 2</option>
+                    <option value="Gardens">Gardens</option>
+                    <option value="Health">Health</option>
+                    <option value="Kitchens 2">Kitchens 2</option>
+                    <option value="Meat and fish">Meat and fish</option>
+                    <option value="Other animals">Other animals</option>
+                    <option value="Streets and roads">Streets and roads</option>
+                    <option value="Tools">Tools</option>
+                    <option value="Vegetables 1">Vegetables 1</option>
+                    <option value="Vegetables 2">Vegetables 2</option>
+                    <option value="Wild animals">Wild animals</option>
+                    <option value="Time">Time</option>
+                </select>
+                <p class="my-0 text-white">Categoría: <span id="ponerCategoria"></span></p>
+        </div>
+        <div class="pt-1 niv">
+            <select class="form-select practica" aria-label="Default select example"  id="prac">
+                <option selected>Practicar</option>
+                <option value="listening">Listening</option>
+                <option value="reading">Reading</option>
+                <option value="wr. imagen">Writing Imagen</option>
+                <option value="wr. audio">Writing Audio</option>
+            </select>
+            <p class="my-0 text-white"> Practica: <span id="ponerPractica"></span></p>
+        </div>
+    </div>
+
+    <div class="inicio">
+        <h2 class="text-white mb-0">Escribir palabra que coincida</h2>
+        <div class="d-flex justify-content-center align-items-center">
+            <img class="item mx-0 mb-0" id="imagen" src="https://e00-elmundo.uecdn.es/assets/multimedia/imagenes/2021/08/26/16299752237253.jpg" alt="imagen">
+        </div>
+        <div class="contenidoFrases pt-0 pb-0">
+            <h1 class="frases mt-1" id="palabra">&nbsp</h1> 
+        </div>
+        <div class="padding-y">
+            <button class="btn btn-success" id="sonar">SONIDO</button>
+            <input type="text" class="btn btn-light" id="palabraBuscarEsp" placeholder="Ingresa English">
+            <button class="btn btn-success" id="comprobar">Comprobar</button>
+        </div>
+        <div class="pt-2">
+            <button id="next" class="btn btn-light">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-square" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <audio id="audio" src="" autoplay></audio>
+</body>
+</html>

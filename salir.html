@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerrar Sesión</title>
+</head>
+<body>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtl7dzmkO104G7SHO4G-F7cyLiASTbuZE",
+            authDomain: "fabio-c2127.firebaseapp.com",
+            projectId: "fabio-c2127",
+            storageBucket: "fabio-c2127.appspot.com",
+            messagingSenderId: "976265620989",
+            appId: "1:976265620989:web:e7604348d0968fdb213d94",
+            measurementId: "G-LWQLEMGBRV"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        async function logout() {
+            try {
+                await signOut(auth);
+                window.location.href = "index.html"; // Cambia "login.html" por la ruta correcta
+            } catch (error) {
+                console.error("Error al cerrar sesión:", error);
+            }
+        }
+        logout()
+    </script>
+</body>
+</html>

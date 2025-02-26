@@ -34,30 +34,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if(resultado){
             busqueda.innerHTML=`
             <div class="inicio">
-                <!-- bloque de la imagen y otros -->
-                <!-- traduccion palabra a fonetica el &nbsp es para que gener un espacio-->
                 <h2 class="text-white mt-3 mb-0" id="palabraFonetica">&nbsp</h2>
-
-                <!-- imagen mas los dos botones -->
                 <div class="medio">
                     <span>&nbsp</span>
                     <img class="item" id="imagen" src="" alt="imagen">
                     <span>&nbsp</span>
                 </div>
                 <div class="contenidoFrases pt-0">
-                    <!-- palabra a aprender -->
-                    <h1 class="frases mt-1" id="palabra">better</h1>
-                    <!-- frase -->
-                    <h2 class="text-white mb-0" id="frase">Practice makes perfect, and with each attempt, you become better.</h2>
+                    <h1 class="frases mt-1" id="palabra"></h1>
+                    <h2 class="text-white mb-0" id="frase"></h2>
                 </div>
-                <!-- los tres botones -->
                 <div class="padding-y">
                     <button class="btn btn-success opciones" id="traducir">TRADUCTOR</button>
                     <button class="btn btn-success opciones" id="fonetica">PRON.</button>
                     <button class="btn btn-success opciones" id="sonar">SONIDO</button>
                 </div>
             </div>     
-
             <audio id="audio" src="" autoplay></audio> 
             `
 
@@ -102,31 +94,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const f1_imagen=await buscarImagenes(palabraBuscar)
             const f1_traducir=''
             const f1_fonetica=''
-            const f1_sonar=await `https://gamedata.britishcouncil.org/sites/default/files/attachment/${palabraBuscar}.mp3`
+            const f1_sonar=`https://gamedata.britishcouncil.org/sites/default/files/attachment/${palabraBuscar}.mp3`
             busqueda.innerHTML=`
             <div class="inicio">
                 <h2 class="text-white mt-3 mb-0" id="palabraFonetica">${f1_fonetica}</h2>
-
-                <!-- imagen mas los dos botones -->
                 <div class="medio">
                     <span>&nbsp</span>
                     <img class="item" id="imagen" src="${f1_imagen}" alt="imagen">
                     <span>&nbsp</span>
                 </div>
                 <div class="contenidoFrases pt-0">
-                    <!-- palabra a aprender -->
                     <h1 class="frases mt-1" id="palabra">${f1_palabra_esp}</h1>
-                    <!-- frase -->
                     <h2 class="text-white mb-0" id="frase">${f1_frase}</h2>
                 </div>
-                <!-- los tres botones -->
                 <div class="padding-y">
                     <button class="btn btn-success opciones" id="traducir">TRADUCTOR</button>
                     <button class="btn btn-success opciones" id="fonetica">PRON.</button>
                     <button class="btn btn-success opciones" id="sonar">SONIDO</button>
                 </div>
             </div>     
-
             <audio id="audio" src="${f1_sonar}" autoplay></audio> 
             `
 
@@ -168,12 +154,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function d2(word){
         palabra.innerHTML=word["Ingles"]
-        frase.innerHTML=word["Traducida"]
+        frase.innerHTML=word["Frases"]
         audio.src=word["Audio"]
         audio.play();
         imagen.src=word["Link"]
     }
-    
     BuscarEsp.addEventListener("click",f2)
     palabraBuscarEsp.addEventListener('keydown', function(event){
         if (event.key === 'Enter') {
@@ -187,30 +172,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if(resultado){
             busqueda.innerHTML=`
             <div class="inicio">
-                <!-- bloque de la imagen y otros -->
-                <!-- traduccion palabra a fonetica el &nbsp es para que gener un espacio-->
                 <h2 class="text-white mt-3 mb-0" id="palabraFonetica">&nbsp</h2>
-
-                <!-- imagen mas los dos botones -->
                 <div class="medio">
                     <span>&nbsp</span>
                     <img class="item" id="imagen" src="" alt="imagen">
                     <span>&nbsp</span>
                 </div>
                 <div class="contenidoFrases pt-0">
-                    <!-- palabra a aprender -->
-                    <h1 class="frases mt-1" id="palabra">better</h1>
-                    <!-- frase -->
-                    <h2 class="text-white mb-0" id="frase">Practice makes perfect, and with each attempt, you become better.</h2>
+                    <h1 class="frases mt-1" id="palabra"></h1>
+                    <h2 class="text-white mb-0" id="frase"></h2>
                 </div>
-                <!-- los tres botones -->
                 <div class="padding-y">
                     <button class="btn btn-success opciones" id="traducir">TRADUCTOR</button>
                     <button class="btn btn-success opciones" id="fonetica">PRON.</button>
                     <button class="btn btn-success opciones" id="sonar">SONIDO</button>
                 </div>
             </div>     
-
             <audio id="audio" src="" autoplay></audio> 
             `
             const palabraFonetica=document.getElementById("palabraFonetica")
@@ -255,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const f2_imagen=await buscarImagenes(f2_palabra_ing)
             const f2_traducir=''
             const f2_fonetica=''
-            const f2_sonar=await `https://gamedata.britishcouncil.org/sites/default/files/attachment/${f2_palabra_ing}.mp3`
+            const f2_sonar=`https://gamedata.britishcouncil.org/sites/default/files/attachment/${f2_palabra_ing}.mp3`
             busqueda.innerHTML=`
             <div class="inicio">
                 <h2 class="text-white mt-3 mb-0" id="palabraFonetica">${f2_fonetica}</h2>
@@ -280,9 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>     
 
-            <audio id="audio" src="" autoplay></audio> 
+            <audio id="audio" src="${f2_sonar}" autoplay></audio> 
             `
-
             const palabraFonetica=document.getElementById("palabraFonetica")
             const palabra=document.getElementById("palabra")
             const frase=document.getElementById("frase")
@@ -298,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     frase.innerHTML=f2_frase
                     a=1
                 }else{
-                    palabra.innerHTML=palabraBuscar
+                    palabra.innerHTML=palabraBuscarEsp
                     frase.innerHTML=f2_traducir
                     a=0
                 }

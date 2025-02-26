@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.mistral.ai https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline';">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/principal.css">
+    <link rel="stylesheet" href="../css/boostrap-css/bootstrap.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@700&display=swap" rel="stylesheet">
+    <script src="../css/boostrap.js/bootstrap.js" defer></script>
+    <title>fabio</title>
+    <link rel="icon" href="../images-pagina/fabio.png" type="image/x-icon">
+    <script defer src="../nav.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="nav"></div>
+    <div class="container mt-2">
+        <header>
+            <h1>Chat con Fabio - Practica Inglés</h1>
+        </header>
+
+        <div id="error" class="error-message" role="alert" aria-live="polite"></div>
+        
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="status-indicator">
+                    <div id="status-dot" class="status-dot status-connected" aria-hidden="true"></div>
+                    <span id="status-text" role="status">En línea</span>
+                </div>
+            </div>
+            
+            <div id="chat-messages" class="chat-messages" role="log" aria-label="Conversación">
+                <div class="message ai-message">
+                    <div class="message-header">
+                        <div class="avatar ai-avatar" aria-hidden="true">F</div>
+                        <span>Fabio</span>
+                    </div>
+                    <div class="message-content">
+                        <p>¡Hola! Soy Fabio 😊 : Hi! I'm Fabio 😊</p>
+                        <p>¡Practiquemos inglés juntos! : Let's practice English together!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-container">
+                <textarea 
+                    id="message-input" 
+                    class="message-input" 
+                    placeholder="Escribe tu mensaje en English..." 
+                    rows="3"
+                    aria-label="Mensaje"
+                    maxlength="1000"
+                ></textarea>
+                <button 
+                    id="send-button" 
+                    class="send-button"
+                    aria-label="Enviar mensaje"
+                >
+                    Send
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Constantes y configuración
+        const API_CONFIG = {
+            url: 'https://api.mistral.ai/v1/chat/completions',
+            model: 'mistral-small',
+            maxTokens: 50,
+            temperature: 0.9
+        };
+
+        // Variables globales
+        let conversationHistory = [];
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const chatMessages = document.getElementById('chat-messages');
+        const errorDisplay = document.getElementById('error');
+        const statusDot = document.getElementById('status-dot');
+        const statusText = document.getElementById('status-text');
+        const MISTRAL_API_KEY = "tmf3EM88QieFaD0BLlhyFDewF1TWGT6D";
+
+        // Comprobación de la API key
+        if (!MISTRAL_API_KEY) {
+            showError('API key no configurada. Por favor, configure su API key de Mistral AI.');
+        }
+
+        // Funciones de utilidad
+        function showError(message) {
+            errorDisplay.textContent = message;
+            errorDisplay.style.display = 'block';
+            setTimeout(() => {
+                errorDisplay.style.display = 'none';
+            }, 3000);
+        }
+
+        function updateConnectionStatus(isConnected) {
+            statusDot.className = `status-dot status-${isConnected ? 'connected' : 'disconnected'}`;
+            statusText.textContent = isConnected ? 'En línea' : 'Desconectado';
+        }
+
+        function sanitizeHTML(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Función para crear mensajes en el chat
+        function appendMessage(content, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}-message`;
+            
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'message-header';
+            
+            const avatar = document.createElement('div');
+            avatar.className = `avatar ${type}-avatar`;
+            avatar.textContent = type === 'ai' ? 'F' : 'Tu';
+            avatar.setAttribute('aria-hidden', 'true');
+            
+            const name = document.createElement('span');
+            name.textContent = type === 'ai' ? 'Fabio' : localStorage.getItem("nombre_fabio");
+            
+            headerDiv.appendChild(avatar);
+            headerDiv.appendChild(name);
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = sanitizeHTML(content);
+            
+            messageDiv.appendChild(headerDiv);
+            messageDiv.appendChild(contentDiv);
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Función para llamar a la API de Mistral
+        async function callMistralAPI(messages) {
+            try {
+                const response = await fetch(API_CONFIG.url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${MISTRAL_API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: API_CONFIG.model,
+                        messages: messages,
+                        temperature: API_CONFIG.temperature,
+                        max_tokens: API_CONFIG.maxTokens
+                    })
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error?.message || `Error ${response.status}`);
+                }
+                
+                const data = await response.json();
+                return data.choices[0].message.content;
+            } catch (error) {
+                console.error('Error en la API:', error);
+                throw error;
+            }
+        }
+
+        // Función para generar respuestas
+        async function generateResponse(userMessage) {
+            const systemPrompt = {
+                role: "system",
+                content: `
+You are Fabio, a young, kind, and empathetic person from the United Kingdom. You speak very basic British English and respond as briefly as possible. You are friendly and ask about topics that interest young people, like music, movies, sports, technology, or social media. If the user writes something incorrectly in English, correct them briefly in English. Always keep your responses short and simple.
+                `
+            };
+
+            try {
+                const messages = [systemPrompt, ...conversationHistory];
+                return await callMistralAPI(messages);
+            } catch (error) {
+                showError('No se pudo obtener una respuesta. Por favor, intenta de nuevo.');
+                return null;
+            }
+        }
+
+        // Manejador de envío de mensajes
+        async function handleSendMessage() {
+            const message = messageInput.value.trim();
+            
+            if (!message) return;
+            
+            sendButton.disabled = true;
+            messageInput.value = '';
+            
+            appendMessage(message, 'user');
+            conversationHistory.push({ role: "user", content: message });
+            
+            const thinkingIndicator = document.createElement('div');
+            thinkingIndicator.className = 'thinking';
+            thinkingIndicator.innerHTML = `
+                <div class="avatar ai-avatar">L</div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            `;
+            chatMessages.appendChild(thinkingIndicator);
+            
+            try {
+                const response = await generateResponse(message);
+                if (response) {
+                    appendMessage(response, 'ai');
+                    conversationHistory.push({ role: "assistant", content: response });
+                }
+            } finally {
+                chatMessages.removeChild(thinkingIndicator);
+                sendButton.disabled = false;
+                messageInput.focus();
+            }
+        }
+
+        // Event listeners
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+            }
+        });
+
+        sendButton.addEventListener('click', handleSendMessage);
+
+        // Manejo de estado de conexión
+        window.addEventListener('online', () => updateConnectionStatus(true));
+        window.addEventListener('offline', () => updateConnectionStatus(false));
+    </script>
+</body>
+</html>
