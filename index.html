@@ -120,7 +120,10 @@
         const q = query(usersCollectionRef, where("email", "==", user.email));
         const querySnapshot = await getDocs(q);
         if (querySnapshot.empty) {
-            console.log("No se encontraron usuarios con ese correo.");
+            //console.log("No se encontraron usuarios con ese correo.");
+		if(!localStorage.getItem("categoria")){
+			localStorage.setItem("categoria", "Accessories")
+		}
         } else {
             querySnapshot.forEach((doc) => {
                 //console.log("Datos del documento:", doc.data().name);
