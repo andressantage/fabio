@@ -1,5 +1,5 @@
 // Elementos del DOM
-document.getElementById("nombreUsuario").innerHTML=localStorage.getItem("nombre_fabio")
+document.getElementById("nombreUsuario").innerHTML=''
 const catElement = document.getElementById("cat");
 const nivElement = document.getElementById("niv");
 const nombreUsuarioElement = document.getElementById("nombreUsuario");
@@ -7,6 +7,9 @@ const nombreUsuarioElement = document.getElementById("nombreUsuario");
 // Cargar datos previos de localStorage
 if (localStorage.getItem("categoria")) {
     document.getElementById("ponerCategoria").innerHTML = localStorage.getItem("categoria");
+}else{
+    localStorage.setItem("categoria", 'Action')
+    document.getElementById("ponerCategoria").innerHTML = 'Action';
 }
 if (localStorage.getItem("nivel")) {
     document.getElementById("ponerNivel").innerHTML = localStorage.getItem("nivel");
