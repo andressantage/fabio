@@ -1,5 +1,4 @@
 // Elementos del DOM
-document.getElementById("nombreUsuario").innerHTML=''
 const catElement = document.getElementById("cat");
 const nivElement = document.getElementById("niv");
 const nombreUsuarioElement = document.getElementById("nombreUsuario");
