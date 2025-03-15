@@ -14,7 +14,12 @@ nav.innerHTML=`
             <li><a class="nav-link" href="../vocabtest/index.html">VOCABTEST</a></li>
             <li><a class="nav-link" href="../chat/index.html">CHAT</a></li>
             <li><a class="nav-link" href="../ayudar/index.html">AYUDA A MEJORAR</a></li>
-            <li><a href="../salir.html"><button class="cerrasesion">Cerrar sesión</button></a></li>
+        </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-end">
+        <p style="color: black;" class="nUsuario m-0" id="nombreUsuario"></p>
+        <div class="cerra">
+            <a href="../salir.html"><button class="cerrasesion">Cerrar sesión</button></a>
         </div>
     </div>
     </div>
