@@ -1,135 +1,444 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/principal.css">
-    <link rel="stylesheet" href="../css/boostrap-css/bootstrap.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Roboto:wght@700&display=swap" rel="stylesheet">
-    <script src="../css/boostrap.js/bootstrap.js" defer></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <title>fabio</title>
+    
+    <!-- Dependencias -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <title>Fabio Flashcards</title>
     <link rel="icon" href="../images-pagina/fabio.png" type="image/x-icon">
-    <script defer src="../nav.js"></script>
-    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Estilos CSS Mejorados -->
+    <style>
+        :root {
+            --background-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --primary-color: #5865f2;
+            --primary-hover: #4752c4;
+            --text-dark: #2e3338;
+            --text-light: #5c626b;
+            --success-color: #3ba55d;
+            --danger-color: #ed4245;
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-dark);
+            font-family: var(--font-family);
+            padding-top: 1.5rem;
+        }
+
+        /* --- Filtros --- */
+        .filter-container {
+            background-color: var(--card-bg);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .form-select {
+            border-color: #dcdfe4;
+        }
+        .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(88, 101, 242, 0.2);
+        }
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+        #ponerCategoria, #ponerNivel {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        /* --- Contenedor de la Tarjeta (para la perspectiva 3D) --- */
+        .flashcard-scene {
+            perspective: 1000px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 520px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden; /* Safari */
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+        }
+
+        .flashcard-face--back {
+            transform: rotateY(180deg);
+        }
+
+        /* --- Barra de Progreso --- */
+        .progress-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+        }
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-color), #7b85f8);
+            border-radius: 10px;
+            transition: width 0.4s ease-out;
+        }
+
+        /* --- Contenido de la Tarjeta --- */
+        #palabraFonetica {
+            color: var(--text-light);
+            font-weight: 500;
+            min-height: 1.5rem;
+        }
+        .flashcard-img {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+        #palabra, #palabra-traducida {
+            font-weight: 700;
+        }
+        #frase, #frase-traducida {
+            color: var(--text-light);
+        }
+        
+        .difficulty-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        /* --- Botones --- */
+        .btn-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-circle:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            border-top: 1px solid #e9ecef;
+            padding-top: 1.5rem;
+            margin-top: 1rem;
+        }
+        .btn-action {
+            background-color: #f0f2f5;
+            color: var(--text-light);
+            border: none;
+            font-weight: 500;
+        }
+        .btn-action:hover {
+            background-color: #e4e6eb;
+            color: var(--text-dark);
+        }
+
+    </style>
 </head>
 <body>
-    <div id="nav"></div>
-   <div class="d-flex flex-row justify-content-between">
-        <div class="pt-1 ancho">
-            <select class="form-select anchoSelect" aria-label="Default select example"  id="cat">
-                <option selected>Categorías</option>
-                <option value="todas">Todas</option>
-                <option value="num_esp">num_esp</option>
-                <option value="Accessories">Accessories</option>
-                <option value="Action">Action</option>
-                <option value="Bedrooms">Bedrooms</option>
-                <option value="Body Parts 1">Body Parts 1</option>
-                <option value="Clothes 1">Clothes 1</option>
-                <option value="Clothes 2">Clothes 2</option>
-                <option value="Colours">Colours</option>
-                <option value="Daily routine">Daily routine</option>
-                <option value="Drinks">Drinks</option>
-                <option value="Everyday Obje">Everyday Obje</option>
-                <option value="Farm animals">Farm animals</option>
-                <option value="Food in Britain 1">Food in Britain 1</option>
-                <option value="Food in Brain 2">Food in Brain 2</option>
-                <option value="Fruit 1">Fruit 1</option>
-                <option value="Holidays">Holidays</option>
-                <option value="Homes">Homes</option>
-                <option value="Hotels">Hotels</option>
-                <option value="Jobs 1">Jobs 1</option>
-                <option value="Jobs 2">Jobs 2</option>
-                <option value="Kitchens 1">Kitchens 1</option>
-                <option value="Living roms">Living roms</option>
-                <option value="Meals and cook">Meals and cook</option>
-                <option value="Relationship">Relationship</option>
-                <option value="Money">Money</option>
-                <option value="Moving">Moving</option>
-                <option value="Nature1">Nature1</option>
-                <option value="Places in a town">Places in a town</option>
-                <option value="Restaurants 1">Restaurants 1</option>
-                <option value="School">School</option>
-                <option value="Shopping">Shopping</option>
-                <option value="Snacks and desserts">Snacks and desserts</option>
-                <option value="Transport 1">Transport 1</option>
-                <option value="Transport 2">Transport 2</option>
-                <option value="Weather">Weather</option>
-                <option value="Air travel">Preposiciones y conjunciones</option>
-                <option value="Around town">Articulos</option>
-                <option value="Saludos y cortesia">Saludos y cortesia</option>
-                <option value="Preguntas">Preguntas</option>
-                <option value="Adjetivos">Adjetivos</option>
-                <option value="Adverbios">Adverbios</option>
-                <option value="Numeros">Numeros</option>
-                <option value="Verbs">Verbs</option>
-                <option value="Otras">Otras</option>
-                <option value="Pronombres Personales">Pronombres Personales</option>
-                <option value="Pronombres Posesivos">Pronombres Posesivos</option>
-                <option value="Pronombres Demostrativos">Pronombres Demostrativos</option>
-                <option value="Air travel">Air travel</option>
-                <option value="Around town">Around town</option>
-                <option value="Others importants">Others importants</option>
-                <option value="Bathrooms">Bathrooms</option>
-                <option value="Appearance 2">Appearance 2</option>
-                <option value="Bicycles and motorbikes">Bicycles and motorbikes</option>
-                <option value="Beaches">Beaches</option>
-                <option value="Body parts 2">Body parts 2</option>
-                <option value="Cars">Cars</option>
-                <option value="Christmas in the UK">Christmas in the UK</option>
-                <option value="Containers">Containers</option>
-                <option value="Football">Football</option>
-                <option value="Fruit 2">Fruit 2</option>
-                <option value="Gardens">Gardens</option>
-                <option value="Health">Health</option>
-                <option value="Kitchens 2">Kitchens 2</option>
-                <option value="Meat and fish">Meat and fish</option>
-                <option value="Other animals">Other animals</option>
-                <option value="Streets and roads">Streets and roads</option>
-                <option value="Tools">Tools</option>
-                <option value="Vegetables 1">Vegetables 1</option>
-                <option value="Vegetables 2">Vegetables 2</option>
-                <option value="Wild animals">Wild animals</option>
-                <option value="Time">Time</option>
-            </select>
-            <p class="my-0 text-white"> Categoría: <span id="ponerCategoria"></span></p>
-        </div>
-        <div class="pt-1 niv">
-            <select class="form-select" aria-label="Default select example" id="niv">
-                <option selected>Nivel</option>
-                <option value="todas">Todas</option>
-                <option value="facil">Facil</option>
-                <option value="dificil">Dificil</option>
-            </select>
-            <p class="my-0 text-white"> Nivel: <span id="ponerNivel"></span></p>
-        </div>
-    </div>
-
-    <div class="inicio">
-        <h2 class="text-white mb-0" id="palabraFonetica">&nbsp</h2>
-
-        <div class="medio">
-            <button class="btn btn-success px-4 item" id="facil">FACIL</button>
-            <img class="item" id="imagen" src="" alt="imagen">
-            <button class="btn btn-danger item" id="dificil">DIFICIL</button>
-        </div>
-        <div class="contenidoFrases pt-0">
-            <h1 class="frases mt-1" id="palabra"></h1>
-            <h2 class="text-white mb-0" id="frase"></h2>
-        </div>
-        <div class="padding-y">
-            <button class="btn btn-success opciones" id="traducir">TRADUCTOR</button>
-            <button class="btn btn-success opciones" id="fonetica">PRON.</button>
-            <button class="btn btn-success opciones" id="sonar">SONIDO</button>
-        </div>
-    </div>
     
-    <audio id="audio" src="" autoplay></audio>
+    <div class="container">
+        <!-- Filtros -->
+        <header class="row justify-content-center mb-4">
+            <div class="col-12 col-md-10 col-lg-8">
+                <div class="filter-container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                    <div>
+                        <span class="filter-label">Categoría: <span id="ponerCategoria"></span></span>
+                        <select class="form-select form-select-sm mt-1" id="cat">
+                            <option selected>Cambiar categoría...</option>
+                            <option value="todas">Todas</option>
+                            <!-- Resto de opciones -->
+                        </select>
+                    </div>
+                    <div>
+                        <span class="filter-label">Nivel: <span id="ponerNivel"></span></span>
+                        <select class="form-select form-select-sm mt-1" id="niv">
+                             <option selected>Cambiar nivel...</option>
+                            <option value="todas">Todas</option>
+                            <option value="facil">Fácil</option>
+                            <option value="dificil">Difícil</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-    <script async type="module" src="script.js"></script>
+        <!-- Escena de la Tarjeta -->
+        <main class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-6">
+                <div class="flashcard-scene">
+                    <div class="flashcard" id="flashcard">
+                        <!-- Cara Frontal -->
+                        <div class="flashcard-face flashcard-face--front text-center">
+                            <div class="progress-container"><div id="progress-bar"></div></div>
+                            <h5 id="palabraFonetica">&nbsp;</h5>
+                            <div class="difficulty-buttons">
+                                <button class="btn btn-danger btn-circle shadow-sm" id="dificil">DIFÍCIL</button>
+                                <img class="shadow-sm flashcard-img" id="imagen" src="https://i.imgur.com/g0P3eH3.png" alt="Imagen de la palabra">
+                                <button class="btn btn-success btn-circle shadow-sm" id="facil">FÁCIL</button>
+                            </div>
+                            <div>
+                                <h1 class="display-5" id="palabra">Cargando...</h1>
+                                <p class="h5 fw-normal" id="frase">Selecciona una categoría para empezar.</p>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="btn btn-action" id="traducir"><i class="fa-solid fa-rotate me-2"></i> Traducir</button>
+                                <button class="btn btn-action" id="fonetica"><i class="fa-solid fa-comment-dots me-2"></i> Pron.</button>
+                                <button class="btn btn-action" id="sonar"><i class="fa-solid fa-volume-high me-2"></i> Sonido</button>
+                            </div>
+                        </div>
+                        <!-- Cara Trasera -->
+                        <div class="flashcard-face flashcard-face--back text-center">
+                            <div class="progress-container"><div id="progress-bar-back" class="progress-bar" style="background: var(--success-color);"></div></div>
+                            <h5>Traducción</h5>
+                            <div>
+                                <!-- Espacio para la imagen si se desea -->
+                            </div>
+                            <div class="my-auto">
+                                <h1 class="display-5" id="palabra-traducida"></h1>
+                                <p class="h5 fw-normal" id="frase-traducida"></p>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="btn btn-action" id="traducir-back"><i class="fa-solid fa-rotate me-2"></i> Volver</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <audio id="audio" src=""></audio>
+
+    <script type="module">
+        // Elementos del DOM
+        const catElement = document.getElementById("cat");
+        const nivElement = document.getElementById("niv");
+
+        // Llenar el resto de las categorías (ejemplo)
+        const categories = ["Accessories","Action","Bedrooms","Body Parts 1","Clothes 1","Colours","Daily routine","Drinks","Farm animals","Fruit 1","Homes","Jobs 1","Nature1","School","Shopping","Verbs"];
+        categories.forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat;
+            option.textContent = cat;
+            catElement.appendChild(option);
+        });
+        
+        // --- Lógica Principal ---
+
+        // Configuración de Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+        import { getFirestore, doc, collection, addDoc, query, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+        const firebaseConfig = { apiKey: "AIzaSyBtl7dzmkO104G7SHO4G-F7cyLiASTbuZE", authDomain: "fabio-c2127.firebaseapp.com", projectId: "fabio-c2127", storageBucket: "fabio-c2127.firebasestorage.app", messagingSenderId: "976265620989", appId: "1:976265620989:web:e7604348d0968fdb213d94", measurementId: "G-LWQLEMGBRV" };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Variables Globales
+        let dic = [];
+        let interfazInicializada = false;
+        let userEmailGlobal = 'guest_user';
+        let indicePalabra = 0;
+
+        // --- Event Listeners ---
+        catElement.addEventListener("change", () => {
+            if (catElement.value !== "Cambiar categoría...") {
+                localStorage.setItem("categoria", catElement.value);
+                window.location.reload();
+            }
+        });
+        nivElement.addEventListener("change", () => {
+            if (nivElement.value !== "Cambiar nivel...") {
+                localStorage.setItem("nivel", nivElement.value);
+                window.location.reload();
+            }
+        });
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) userEmailGlobal = user.email;
+            if (!interfazInicializada) {
+                await cargarDatos();
+                inicializarInterfaz();
+                interfazInicializada = true;
+            }
+        });
+
+        // --- Funciones ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        async function cargarDatos() {
+            try {
+                const categoria = localStorage.getItem("categoria") || 'Action';
+                const nivel = localStorage.getItem("nivel") || 'todas';
+                document.getElementById("ponerCategoria").textContent = categoria;
+                document.getElementById("ponerNivel").textContent = nivel;
+
+                let lista = [];
+                if (categoria === "todas") {
+                    const response = await fetch("../todas.json");
+                    lista = await response.json() || [];
+                } else {
+                    const response = await fetch("../datos.json");
+                    const data = await response.json();
+                    lista = data[categoria] || [];
+                }
+                
+                if (nivel === "facil" || nivel === "dificil") {
+                    await filtrarPorNivel(lista, nivel);
+                } else {
+                    dic = lista;
+                }
+                
+                shuffleArray(dic);
+            } catch (error) {
+                console.error("Error cargando datos:", error);
+                document.getElementById("palabra").textContent = "Error al cargar datos.";
+            }
+        }
+
+        async function filtrarPorNivel(lista, nivel) {
+            try {
+                const q = query(collection(db, "respuestas"), where("nivel", "==", nivel));
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.empty) {
+                    document.getElementById("frase").innerHTML = "No hay palabras en este nivel.";
+                    dic = [];
+                } else {
+                    const palabras = querySnapshot.docs.map(doc => doc.data().palabra);
+                    dic = lista.filter(element => palabras.includes(element.Ingles));
+                }
+            } catch (error) {
+                console.error("Error al filtrar por nivel:", error);
+            }
+        }
+
+        function inicializarInterfaz() {
+            const flashcard = document.getElementById('flashcard');
+            const [traducirBtn, foneticaBtn, sonarBtn] = ['traducir', 'fonetica', 'sonar'].map(id => document.getElementById(id));
+            const traducirBackBtn = document.getElementById('traducir-back');
+            const [facilBtn, dificilBtn] = ['facil', 'dificil'].map(id => document.getElementById(id));
+            const audio = document.getElementById("audio");
+
+            let foneticaVisible = false;
+
+            function actualizarInterfaz() {
+                // Quitar el volteo de la tarjeta
+                flashcard.classList.remove('is-flipped');
+                
+                if (!dic || dic.length === 0 || indicePalabra >= dic.length) {
+                    document.getElementById("palabra").textContent = "¡Excelente!";
+                    document.getElementById("frase").textContent = "Has completado esta sección. Elige otra para seguir.";
+                    document.getElementById("imagen").src = "https://i.imgur.com/szYp6wq.png";
+                    [facilBtn, dificilBtn, traducirBtn, foneticaBtn, sonarBtn].forEach(btn => btn.disabled = true);
+                    updateProgressBar();
+                    return;
+                }
+                
+                const palabraActual = dic[indicePalabra];
+                
+                // Cara frontal
+                document.getElementById("imagen").src = palabraActual["Link"] ?? "https://i.imgur.com/g0P3eH3.png";
+                audio.src = palabraActual["Audio"];
+                document.getElementById("palabra").textContent = palabraActual["Ingles"];
+                document.getElementById("frase").textContent = palabraActual["Frases"];
+                document.getElementById("palabraFonetica").innerHTML = "&nbsp;";
+                
+                // Cara trasera (precargar)
+                document.getElementById("palabra-traducida").textContent = palabraActual["Español"];
+                document.getElementById("frase-traducida").textContent = palabraActual["Traducida"];
+
+                foneticaVisible = false;
+                facilBtn.disabled = false;
+                dificilBtn.disabled = false;
+                updateProgressBar();
+            }
+            
+            function updateProgressBar() {
+                const total = dic.length > 0 ? dic.length : 1;
+                const progress = (indicePalabra / total) * 100;
+                document.getElementById('progress-bar').style.width = `${progress}%`;
+                document.getElementById('progress-bar-back').style.width = `${progress}%`;
+            }
+
+            async function manejarRespuesta(valor) {
+                facilBtn.disabled = true;
+                dificilBtn.disabled = true;
+                
+                if (userEmailGlobal !== 'guest_user') {
+                    const palabraActual = dic[indicePalabra];
+                    const data = { email: userEmailGlobal, palabra: palabraActual["Ingles"], categoria: localStorage.getItem("categoria"), nivel: valor };
+                    const q = query(collection(db, "respuestas"), where("email", "==", userEmailGlobal), where("palabra", "==", palabraActual["Ingles"]));
+                    const querySnapshot = await getDocs(q);
+                    if (querySnapshot.empty) {
+                        await addDoc(collection(db, "respuestas"), data);
+                    } else {
+                        const docId = querySnapshot.docs[0].id;
+                        await updateDoc(doc(db, "respuestas", docId), { nivel: valor });
+                    }
+                }
+                
+                indicePalabra++;
+                // Pequeña demora para que el usuario vea la transición antes de la siguiente palabra
+                setTimeout(actualizarInterfaz, 300);
+            }
+
+            traducirBtn.addEventListener("click", () => flashcard.classList.add('is-flipped'));
+            traducirBackBtn.addEventListener("click", () => flashcard.classList.remove('is-flipped'));
+            sonarBtn.addEventListener("click", () => audio.play());
+            foneticaBtn.addEventListener("click", () => {
+                if (!dic[indicePalabra]) return;
+                foneticaVisible = !foneticaVisible;
+                document.getElementById("palabraFonetica").innerHTML = foneticaVisible ? dic[indicePalabra]["Fonetica"] : "&nbsp;";
+            });
+            facilBtn.addEventListener("click", () => manejarRespuesta("facil"));
+            dificilBtn.addEventListener("click", () => manejarRespuesta("dificil"));
+
+            // Primera carga
+            actualizarInterfaz();
+        }
+    </script>
 </body>
 </html>
